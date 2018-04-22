@@ -1,0 +1,11 @@
+#to concatenate multiple files
+./ffmpeg -f concat -i list_of_files.txt output.wav
+
+#to detect speeches
+auditok -i MIT6_0001F16_Lecture_01_300k.wav -e 55 -M 20 -o det_{N}.wav
+
+#ambience.py
+python3 ambience.py --i filename.mp4
+
+#sola
+python3 solafs.py --scale xrate input output 
