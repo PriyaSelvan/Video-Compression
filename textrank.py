@@ -19,6 +19,7 @@ from pydub import AudioSegment
 import operator
 import sys
 import argparse
+from moviepy.video.io.ffmpeg_tools import ffmpeg_extract_subclip
 class SrtObject:
 	def __init__(self,filename):
 		subs = pysrt.open(filename)
@@ -67,7 +68,7 @@ class SrtObject:
 				self.finalList.append(sentenceList)
 		subsentence.close()
 		timestamp.close()
-	def compressSentences(self,filename,checklist):
+	def compressSentences(self,checklist):
 		samt = 250
 		ranks=open("textrank_detections/RankedSentences.txt",'w')
 		sentence=open("textrank_detections/sentenceList.txt","w")
@@ -82,8 +83,8 @@ class SrtObject:
 		ultimateList=[]
 		parser = PlaintextParser.from_file('textrank_detections/subsentence.txt', Tokenizer('english'))
 		summarizer=TextRankSummarizer()
-		silence=AudioSegment.silent(duration=samt)
-		audio = AudioSegment.from_wav(filename)
+		#silence=AudioSegment.silent(duration=samt)
+		#audio = AudioSegment.from_wav(filename)
 		scoreList=[]
 
 		summary=summarizer.rate_sentences(parser.document)
@@ -107,8 +108,8 @@ class SrtObject:
             				break
 		ranks.close()
 
-		out5=open("textrank_detections/segment_file_"+str(checklist)+".txt",'w')
-		out7=open("textrank_detections/segment_file_notext_"+str(checklist)+".txt",'w')
+		#out5=open("textrank_detections/segment_file_"+str(checklist)+".txt",'w')
+		#out7=open("textrank_detections/segment_file_notext_"+str(checklist)+".txt",'w')
 		ultimateList=[]
 		timeSortedUltimateList=[]
 		audiolist=[]
@@ -143,33 +144,45 @@ class SrtObject:
 		info=''
 		st=timeSortedUltimateList[0][1]
 		en=0
+		self.starts = list()
+		self.ends = list()
 		for k in timeSortedUltimateList:
 			if(not(k[1]==previousEnd) and previousEnd!=-999):
-				audiolist.append(silence)
-				audiolist.append(audio[k[1]:k[2]])
+				#audiolist.append(silence)
+				#audiolist.append(audio[k[1]:k[2]])
 				en=previousEnd
-				out5.write("seg "+str(num)+":"+info+"\t"+str(st)+"\t"+str(en))
-				out5.write("\n\n")
-				out7.write("seg "+str(num)+":\t"+str(st)+"\t"+str(en))
-				out7.write("\n\n")
+				#out5.write("seg "+str(num)+":"+info+"\t"+str(st)+"\t"+str(en))
+				self.starts.append(st)
+				self.ends.append(en)
+				#out5.write("\n\n")
+				#out7.write("seg "+str(num)+":\t"+str(st)+"\t"+str(en))
+				#out7.write("\n\n")
 				st=k[1]
 				num+=1
 				info=''
 				info+=k[0]
 
 			else:
-				audiolist.append(audio[k[1]:k[2]])
+				#audiolist.append(audio[k[1]:k[2]])
 				info+=k[0]
 			previousEnd=k[2]
-		finalaudio = audiolist[0]
-		for a in range(1,len(audiolist)):
-			finalaudio = finalaudio + audiolist[a]
-		finalaudio.export("textrank_detections/cutoff"+filename, format="wav")
+		#finalaudio = audiolist[0]
+		#for a in range(1,len(audiolist)):
+			#finalaudio = finalaudio + audiolist[a]
+		#finalaudio.export("textrank_detections/cutoff"+filename, format="wav")
 
 
-		out5.close()
-		out7.close()
+		#out5.close()
+		#out7.close()
 
+	def makeFinalVideo(self,filename):
+		starts = [i/1000 for i in self.starts]
+		ends = [i/1000 for i in self.ends]
+		for i in range(len(starts)):
+			ffmpeg_extract_subclip(filename, starts[i], ends[i], targetname="video_detections/"+str(i)+"final.mp4")
+		
+
+		
 	
 		
 
@@ -177,12 +190,13 @@ class SrtObject:
 if __name__ == "__main__":
 	parser = argparse.ArgumentParser(description="Text Rank optiochecklist")
 	parser.add_argument('--i', type=str, default='input.srt', help="Input trachecklistcript file for textrank")
-	parser.add_argument('--w', type=str, default='input.wav', help="Input audio file for textrank")
+	parser.add_argument('--v', type=str, default='input.mp4', help="Input video file")
 
 	parser.add_argument('--scale', type=float, default=0.5, help="Rate of the new audio after textrank")        
 	args = parser.parse_args()
 	lecture1 = SrtObject(args.i)
-	lecture1.compressSentences(args.w,args.scale)
+	lecture1.compressSentences(args.scale)
+	lecture1.makeFinalVideo(args.v)
 	
         
 	
