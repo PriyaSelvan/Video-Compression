@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>Video Compression</title>
+	<meta charset="utf-8" />
+	{% load staticfiles %}
+	<link rel="stylesheet" href="{% static 'video/css/bootstrap.min.css' %}" type = "text/css"/>
+<style type="text/css">
+		html,
+		body {
+		  height:100%
+		}
+	</style>
+</head>
+
+<body class="body" style="background-color:#f6f6f6">
+<div class="jumbotron">
+        <div class="container">
+          <h1 class="display-3">Compress it!</h1>
+          <p>Intelligent compression of lecture videos</p>
+</div>
+</div>
+<form action="/video/form/" method="post" enctype="multipart/form-data" >
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col"></th>
+      <th scope="col"></th>
+      <th scope="col"></th>
+      <th scope="col"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row"></th>
+      <td></td>
+      <td><label for="name">Your name: </label>
+</td>
+      <td><input id="name" type="text" name="name" value="Enter name"></td>
+    </tr>
+    <tr>
+      <th scope="row"></th>
+      <td></td>
+      <td><label for="mp4">Video file: </label></td>
+      <td><input id="mp4" type="file" name="mp4">
+</td>
+    </tr>
+    <tr>
+      <th scope="row"></th>
+      <td></td>
+      <td><label for="srt">Transcript file: </label>
+</td>
+      <td><input id="srt" type="file" name="srt">
+</td>
+    </tr>
+<tr>
+      <th scope="row"></th>
+      <td></td>
+      <td>
+</td>
+      <td><input type="submit" value="Compress!">
+</td>
+    </tr>
+
+  </tbody>
+</table>
+
+</form>
+{% block content %}
+
+{% endblock %}
+</body>
+
+</html>
+
+
+

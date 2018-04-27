@@ -1,0 +1,10 @@
+{% extends "video/home.html" %}
+{% block content %}
+
+
+<div class="embed-responsive embed-responsive-16by9">
+<video name='demo' controls autoplay width='50%' height='40%'>
+<source src="{{ MEDIA_URL }}{{form.instance.mp4}}" type="video/mp4"></source>
+</video>
+</div>
+{% endblock %}
