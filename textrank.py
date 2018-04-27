@@ -178,10 +178,18 @@ class SrtObject:
 	def makeFinalVideo(self,filename):
 		starts = [i/1000 for i in self.starts]
 		ends = [i/1000 for i in self.ends]
+		frame = ""
+		inter = ""
+		concat_str = "concat:"
 		for i in range(len(starts)):
-			ffmpeg_extract_subclip(filename, starts[i], ends[i], targetname="video_detections/"+str(i)+"final.mp4")
-		
-
+			frame = "video_detections/"+str(i)+"final.mp4"
+			inter = "video_detections/"+str(i)+"inter.ts"
+			ffmpeg_extract_subclip(filename, starts[i], ends[i], targetname=frame)
+			os.system("ffmpeg -i "+frame+" -c copy -bsf:v h264_mp4toannexb -f mpegts "+inter)
+			concat_str = concat_str + inter + "|"
+		concat = concat_str[:-1]
+		concat = '"'+concat+'"'
+		os.system("ffmpeg -i "+concat+" -c copy -bsf:a aac_adtstoasc dragon.mp4")
 		
 	
 		
