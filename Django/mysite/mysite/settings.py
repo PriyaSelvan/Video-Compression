@@ -120,4 +120,4 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 MEDIA_ROOT = '../video/'
-MEDIA_URL = '127.0.0.1:8000/uploads/'
+MEDIA_URL = '../video/'

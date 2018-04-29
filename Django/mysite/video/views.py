@@ -225,3 +225,4 @@ class SrtObject:
 		concat = concat_str[:-1]
 		concat = '"'+concat+'"'
 		os.system("ffmpeg -i "+concat+" -c copy -bsf:a aac_adtstoasc "+name+"dragon.mp4")
+		os.system("cp "+name+"dragon.mp4"+" video/static/video/")
