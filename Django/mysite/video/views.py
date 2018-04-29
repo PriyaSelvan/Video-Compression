@@ -36,9 +36,9 @@ def compress(request):
 		name = form.cleaned_data['name']
 		srt = form.cleaned_data['srt']
 		mp4 = form.cleaned_data['mp4']
+		scale = form.cleaned_data['scale']
 		srt_files = request.FILES.getlist('srt')
 		mp4_files = request.FILES.getlist('mp4')
-		scale =0.6
 		start_main(name,str(srt_files[0]),str(mp4_files[0]),scale)
 		
 		return render(request,'video/name.html',{'form':form})
@@ -143,7 +143,7 @@ class SrtObject:
             				break
 		ranks.close()
 
-		#out5=open("textrank_detections/segment_file_"+str(checklist)+".txt",'w')
+		out5=open(name+"textrank_detections/segment_file_"+str(checklist)+".txt",'w')
 		#out7=open("textrank_detections/segment_file_notext_"+str(checklist)+".txt",'w')
 		ultimateList=[]
 		timeSortedUltimateList=[]
@@ -186,10 +186,10 @@ class SrtObject:
 				#audiolist.append(silence)
 				#audiolist.append(audio[k[1]:k[2]])
 				en=previousEnd
-				#out5.write("seg "+str(num)+":"+info+"\t"+str(st)+"\t"+str(en))
+				out5.write("seg "+str(num)+":"+info+"\t"+str(st)+"\t"+str(en))
 				self.starts.append(st)
 				self.ends.append(en)
-				#out5.write("\n\n")
+				out5.write("\n\n")
 				#out7.write("seg "+str(num)+":\t"+str(st)+"\t"+str(en))
 				#out7.write("\n\n")
 				st=k[1]
@@ -207,7 +207,7 @@ class SrtObject:
 		#finalaudio.export("textrank_detections/cutoff"+filename, format="wav")
 
 
-		#out5.close()
+		out5.close()
 		#out7.close()
 
 	def makeFinalVideo(self,filename,name):
