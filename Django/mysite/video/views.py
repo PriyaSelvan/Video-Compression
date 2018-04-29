@@ -168,9 +168,9 @@ class SrtObject:
 		if(checklist==0.7):
 			print("true")
 			for k in timeSortedUltimateList:
-				for x in finalList:
+				for x in self.finalList:
 					if(k[0] in x[0]):
-						sentence.write(str(finalList.index(x)+1)+"\t"+str(k[3])+"\n")
+						sentence.write(str(self.finalList.index(x)+1)+"\t"+str(k[3])+"\n")
 		sentence.close()
 
 
